@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
                       setPassword(e.target.value);
                       setError('');
                     }}
-                    placeholder="admin123"
+                    placeholder=""
                     className="w-full pr-10 pl-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all duration-200"
                     disabled={isLoading}
                     required
