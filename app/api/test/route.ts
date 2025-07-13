@@ -1,14 +1,26 @@
-export async function POST(req: Request) {
+import { NextResponse } from 'next/server';
+import { executeQuery } from '@/lib/database';
+
+export async function GET() {
   try {
-    const body = await req.json();
-    return new Response(JSON.stringify({
-      env: {
-        DB_HOST: process.env.DB_HOST,
-        JWT_SECRET: process.env.JWT_SECRET
-      },
-      body
-    }), { status: 200 });
-  } catch (e) {
-    return new Response("error: " + e, { status: 500 });
+    console.log('🕵️‍♂️ [DEBUG-DB] در حال واکشی دیتا از دیتابیس...');
+
+    // مثال: واکشی همه یوزرها و همه ادمین‌ها
+    const users: any[] = await executeQuery('SELECT * FROM users ORDER BY id DESC');
+    const admins: any[] = await executeQuery('SELECT * FROM admins ORDER BY id DESC');
+
+    console.log(`✅ [DEBUG-DB] کاربران: ${users.length} تا، ادمین‌ها: ${admins.length} تا`);
+    return NextResponse.json({ users, admins }, { status: 200 });
+  } catch (error) {
+    console.error('💥 [DEBUG-DB] خطا هنگام واکشی دیتابیس:', error);
+    // اگه Error باشه جزئیاتشو بده
+    if (error instanceof Error) {
+      console.error('💥 message:', error.message);
+      console.error('💥 stack:', error.stack);
+    }
+    return NextResponse.json(
+      { error: 'خطا در واکشی دیتابیس', details: (error as any).message || null },
+      { status: 500 }
+    );
   }
 }
