@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
-
-    }
-  },
-  "routes": [
+  "builds": [
     {
-      "src": "/api/(.*)",
-@@ -18,15 +17,10 @@
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
   ],
   "env": {
     "DB_HOST": "217.144.107.147",
@@ -18,10 +13,10 @@
     "DB_NAME": "hxkxytfs_mami",
     "JWT_SECRET": "mamiland_secret_key_2024",
     "LANGCHAIN_API_URL": "https://mine-gpt-alpha.vercel.app/proxy"
-
-
-
-
-
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
   }
 }
