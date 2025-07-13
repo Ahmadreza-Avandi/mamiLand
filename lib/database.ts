@@ -1,7 +1,8 @@
-import mysql from 'mysql2/promise';
+// lib/database.ts
+import { createPool, Pool, PoolOptions } from 'mysql2/promise';
 
 // تنظیمات اتصال به دیتابیس MySQL
-const dbConfig = {
+const poolConfig: PoolOptions = {
   host: process.env.DB_HOST || '217.144.107.147',
   user: process.env.DB_USER || 'hxkxytfs_ahmad',
   password: process.env.DB_PASSWORD || 'Avan.1386',
@@ -10,24 +11,23 @@ const dbConfig = {
   timezone: '+00:00',
   connectTimeout: 60000,
   ssl: {
+    // این‌جا می‌تونی گزینه‌های TLS رو تعریف کنی
     rejectUnauthorized: false,
   },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 };
 
-// استفاده از Connection Pool برای بهبود عملکرد در سرورهای Serverless مانند Vercel
-let pool: mysql.Pool;
+let pool: Pool | null = null;
 
 /**
  * دریافت یا ایجاد Connection Pool
- * @returns {Promise<mysql.Pool>} اتصال Pool
+ * @returns {Pool} اتصال Pool
  */
-export async function getPool(): Promise<mysql.Pool> {
+export function getPool(): Pool {
   if (!pool) {
-    pool = mysql.createPool({
-      ...dbConfig,
-      connectionLimit: 10,
-      queueLimit: 0,
-    });
+    pool = createPool(poolConfig);
     console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
   }
   return pool;
@@ -41,8 +41,8 @@ export async function getPool(): Promise<mysql.Pool> {
  */
 export async function executeQuery(query: string, params: any[] = []): Promise<any> {
   try {
-    const pool = await getPool();
-    const [results] = await pool.execute(query, params);
+    const db = getPool();
+    const [results] = await db.execute(query, params);
     return results;
   } catch (error) {
     console.error('❌ خطا در اجرای کوئری:', error);
@@ -59,5 +59,6 @@ export async function closePool(): Promise<void> {
   if (pool) {
     await pool.end();
     console.log('🔌 Connection pool بسته شد');
+    pool = null;
   }
 }
