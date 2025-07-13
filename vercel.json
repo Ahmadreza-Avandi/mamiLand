@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -17,10 +18,15 @@
   ],
   "env": {
     "DB_HOST": "217.144.107.147",
-    "DB_USER": "hxkxytfs_ahmad",
+    "DB_USER": "hxkxytfs_ahmad", 
     "DB_PASSWORD": "Avan.1386",
     "DB_NAME": "hxkxytfs_mami",
     "JWT_SECRET": "mamiland_secret_key_2024",
     "LANGCHAIN_API_URL": "https://mine-gpt-alpha.vercel.app/proxy"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
   }
 }
