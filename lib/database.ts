@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 
+// تنظیمات اتصال به دیتابیس MySQL
 const dbConfig = {
   host: process.env.DB_HOST || '217.144.107.147',
   user: process.env.DB_USER || 'hxkxytfs_ahmad',
@@ -8,40 +9,39 @@ const dbConfig = {
   charset: 'utf8mb4',
   timezone: '+00:00',
   connectTimeout: 60000,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  // تنظیمات اضافی برای اتصال خارجی
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 };
 
-// استفاده از connection pool برای Vercel
-let pool: mysql.Pool | null = null;
+// استفاده از Connection Pool برای بهبود عملکرد در سرورهای Serverless مانند Vercel
+let pool: mysql.Pool;
 
-export async function getConnection() {
+/**
+ * دریافت یا ایجاد Connection Pool
+ * @returns {Promise<mysql.Pool>} اتصال Pool
+ */
+export async function getPool(): Promise<mysql.Pool> {
   if (!pool) {
-    try {
-      pool = mysql.createPool({
-        ...dbConfig,
-        connectionLimit: 10,
-        queueLimit: 0,
-        acquireTimeout: 60000,
-        timeout: 60000,
-        reconnect: true
-      });
-      console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
-    } catch (error) {
-      console.error('❌ خطا در ایجاد connection pool:', error);
-      throw error;
-    }
+    pool = mysql.createPool({
+      ...dbConfig,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+    console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
   }
   return pool;
 }
 
-export async function executeQuery(query: string, params: any[] = []) {
+/**
+ * اجرای کوئری روی دیتابیس
+ * @param {string} query متن کوئری SQL
+ * @param {any[]} params پارامترهای کوئری
+ * @returns {Promise<any>} نتایج کوئری
+ */
+export async function executeQuery(query: string, params: any[] = []): Promise<any> {
   try {
-    const pool = await getConnection();
+    const pool = await getPool();
     const [results] = await pool.execute(query, params);
     return results;
   } catch (error) {
@@ -52,11 +52,12 @@ export async function executeQuery(query: string, params: any[] = []) {
   }
 }
 
-// برای Vercel نیازی به close connection نیست
-export async function closeConnection() {
+/**
+ * بستن Connection Pool (در صورت نیاز)
+ */
+export async function closePool(): Promise<void> {
   if (pool) {
     await pool.end();
-    pool = null;
     console.log('🔌 Connection pool بسته شد');
   }
 }
