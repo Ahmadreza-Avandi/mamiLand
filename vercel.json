@@ -13,10 +13,5 @@
     "DB_NAME": "hxkxytfs_mami",
     "JWT_SECRET": "mamiland_secret_key_2024",
     "LANGCHAIN_API_URL": "https://mine-gpt-alpha.vercel.app/proxy"
-  },
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
-    }
   }
 }
