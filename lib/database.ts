@@ -19,10 +19,17 @@ export async function getConnection() {
   if (!pool) {
     try {
       pool = mysql.createPool({
-        ...dbConfig,
+        host: dbConfig.host,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        database: dbConfig.database,
+        charset: dbConfig.charset,
+        timezone: dbConfig.timezone,
+        connectTimeout: dbConfig.connectTimeout,
+        ssl: dbConfig.ssl,
         connectionLimit: 10,
         queueLimit: 0,
-        waitForConnections: true // جایگزین reconnect
+        waitForConnections: true
       });
       console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
     } catch (error) {
@@ -53,3 +60,4 @@ export async function closeConnection() {
     console.log('🔌 Connection pool بسته شد');
   }
 }
+
