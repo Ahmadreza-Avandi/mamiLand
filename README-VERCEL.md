@@ -4,7 +4,7 @@
 
 ### 1. آماده‌سازی Repository
 ```bash
-git add .
+git add ...سس
 git commit -m "آماده برای دیپلوی Vercel"
 git push origin main
 ```
