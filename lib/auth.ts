@@ -309,7 +309,7 @@ export async function loginAdmin(username: string, password: string): Promise<bo
       console.log('👤 [AUTH] اضافه کردن ادمین پیش‌فرض...');
       await executeQuery(
         'INSERT IGNORE INTO admins (username, password_hash, is_active) VALUES (?, ?, TRUE)',
-        ['admin', 'admin123']
+        ['admin', '1']
       );
       
       console.log('✅ [AUTH] جدول admins ایجاد شد و ادمین پیش‌فرض اضافه شد');

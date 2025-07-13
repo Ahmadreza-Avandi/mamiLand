@@ -1,12 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // تنظیمات اساسی
+  // تنظیمات برای Vercel
   trailingSlash: false,
+  poweredByHeader: false,
+  compress: true,
   
   // تنظیمات تصاویر
   images: {
     unoptimized: true,
     domains: ['images.pexels.com']
+  },
+  
+  // تنظیمات experimental برای Vercel
+  experimental: {
+    serverComponentsExternalPackages: ['mysql2']
   },
   
   // متغیرهای محیطی

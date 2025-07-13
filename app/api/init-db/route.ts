@@ -98,7 +98,7 @@ export async function POST() {
     console.log('👤 [INIT-DB] اضافه کردن ادمین پیش‌فرض...');
     await executeQuery(
       'INSERT IGNORE INTO admins (username, password_hash, is_active) VALUES (?, ?, TRUE)',
-      ['admin', 'admin123']
+      ['admin', '1']
     );
 
     // اضافه کردن چند کد دسترسی نمونه
