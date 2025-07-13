@@ -1,7 +1,6 @@
-// lib/database.ts
-import { createPool, Pool, PoolOptions } from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 
-const poolConfig: PoolOptions = {
+const dbConfig = {
   host: process.env.DB_HOST || '217.144.107.147',
   user: process.env.DB_USER || 'hxkxytfs_ahmad',
   password: process.env.DB_PASSWORD || 'Avan.1386',
@@ -9,28 +8,39 @@ const poolConfig: PoolOptions = {
   charset: 'utf8mb4',
   timezone: '+00:00',
   connectTimeout: 60000,
+  timeout: 60000,
+  // تنظیمات اضافی برای اتصال خارجی
   ssl: {
-    rejectUnauthorized: false,
-  },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+    rejectUnauthorized: false
+  }
 };
 
-let pool: Pool | null = null;
+// استفاده از connection pool برای Vercel
+let pool: mysql.Pool | null = null;
 
-export function getPool(): Pool {
+export async function getConnection() {
   if (!pool) {
-    pool = createPool(poolConfig);
-    console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
+    try {
+      pool = mysql.createPool({
+        ...dbConfig,
+        connectionLimit: 10,
+        queueLimit: 0,
+        timeout: 60000,
+        reconnect: true
+      });
+      console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
+    } catch (error) {
+      console.error('❌ خطا در ایجاد connection pool:', error);
+      throw error;
+    }
   }
   return pool;
 }
 
-export async function executeQuery(query: string, params: any[] = []): Promise<any> {
+export async function executeQuery(query: string, params: any[] = []) {
   try {
-    const db = getPool();
-    const [results] = await db.execute(query, params);
+    const pool = await getConnection();
+    const [results] = await pool.execute(query, params);
     return results;
   } catch (error) {
     console.error('❌ خطا در اجرای کوئری:', error);
@@ -40,11 +50,11 @@ export async function executeQuery(query: string, params: any[] = []): Promise<a
   }
 }
 
-export async function closePool(): Promise<void> {
+// برای Vercel نیازی به close connection نیست
+export async function closeConnection() {
   if (pool) {
     await pool.end();
-    console.log('🔌 Connection pool بسته شد');
     pool = null;
+    console.log('🔌 Connection pool بسته شد');
   }
 }
-
