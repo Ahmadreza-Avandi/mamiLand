@@ -11,12 +11,12 @@ const nextConfig = {
   },
   // Environment variables برای Vercel
   env: {
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_NAME: process.env.DB_NAME,
-    JWT_SECRET: process.env.JWT_SECRET,
-    LANGCHAIN_API_URL: process.env.LANGCHAIN_API_URL,
+    DB_HOST: process.env.DB_HOST || '217.144.107.147',
+    DB_USER: process.env.DB_USER || 'hxkxytfs_ahmad',
+    DB_PASSWORD: process.env.DB_PASSWORD || 'Avan.1386',
+    DB_NAME: process.env.DB_NAME || 'hxkxytfs_mami',
+    JWT_SECRET: process.env.JWT_SECRET || 'mamiland_secret_key_2024',
+    LANGCHAIN_API_URL: process.env.LANGCHAIN_API_URL || 'https://mine-gpt-alpha.vercel.app/proxy',
   },
   // Webpack config برای MySQL
   webpack: (config, { isServer }) => {
