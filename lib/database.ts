@@ -8,14 +8,11 @@ const dbConfig = {
   charset: 'utf8mb4',
   timezone: '+00:00',
   connectTimeout: 60000,
-  timeout: 60000,
-  // تنظیمات اضافی برای اتصال خارجی
   ssl: {
     rejectUnauthorized: false
   }
 };
 
-// استفاده از connection pool برای Vercel
 let pool: mysql.Pool | null = null;
 
 export async function getConnection() {
@@ -25,8 +22,7 @@ export async function getConnection() {
         ...dbConfig,
         connectionLimit: 10,
         queueLimit: 0,
-        timeout: 60000,
-        reconnect: true
+        waitForConnections: true // جایگزین reconnect
       });
       console.log('✅ Connection pool به دیتابیس MySQL ایجاد شد');
     } catch (error) {
@@ -50,7 +46,6 @@ export async function executeQuery(query: string, params: any[] = []) {
   }
 }
 
-// برای Vercel نیازی به close connection نیست
 export async function closeConnection() {
   if (pool) {
     await pool.end();
