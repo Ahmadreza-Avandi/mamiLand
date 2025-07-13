@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
                       setUsername(e.target.value);
                       setError('');
                     }}
-                    placeholder="admin"
+                    placeholder=""
                     className="w-full pr-10 pl-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all duration-200"
                     disabled={isLoading}
                     required
@@ -89,7 +89,7 @@ export default function AdminLoginPage() {
                 <div className="relative">
                   <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
-                    type="password"
+                    type=""
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -126,13 +126,7 @@ export default function AdminLoginPage() {
             </form>
 
             <div className="mt-8 pt-6 border-t border-pink-100">
-              <div className="bg-pink-50 border border-pink-200 rounded-xl p-4">
-                <p className="text-center text-xs text-pink-700 leading-relaxed">
-                  <strong>اطلاعات ورود:</strong><br />
-                  نام کاربری: admin<br />
-                  رمز عبور: admin123
-                </p>
-              </div>
+              
               
               <div className="mt-4 text-center">
                 <a
